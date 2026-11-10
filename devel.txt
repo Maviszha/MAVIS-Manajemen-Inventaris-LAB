@@ -1,0 +1,263 @@
+1. Arsitektur & Struktur Kode
+Temuan
+
+Struktur masih monolitik & procedural (banyak logic langsung di index.php, login.php, dll).
+
+Belum ada pemisahan jelas antara:
+
+Logic bisnis
+
+Akses database
+
+Tampilan (view)
+
+Dampak
+
+Sulit dirawat (maintenance)
+
+Sulit dikembangkan jika fitur bertambah
+
+Risiko bug saat perubahan
+
+Rekomendasi
+
+Minimal refactor ke pola MVC sederhana
+
+/app
+  /controllers
+  /models
+  /views
+/config
+/public
+
+
+Jika ingin cepat & stabil:
+
+Laravel (paling direkomendasikan)
+
+Atau Slim Framework (ringan)
+
+2. Keamanan (INI KRITIS)
+Temuan
+
+Query SQL menggunakan $conn->query() langsung
+➜ rentan SQL Injection
+
+Belum terlihat:
+
+CSRF protection
+
+Session hardening
+
+Password hashing modern
+
+Rekomendasi Wajib
+
+Gunakan prepared statements
+
+$stmt = $conn->prepare("SELECT * FROM user WHERE username=?");
+$stmt->bind_param("s", $username);
+
+
+Password hashing
+
+password_hash($password, PASSWORD_BCRYPT);
+password_verify($input, $hash);
+
+
+Session security
+
+session_regenerate_id(true);
+
+
+Tambahkan:
+
+CSRF token untuk form
+
+Validasi input (server-side)
+
+3. Autentikasi & Hak Akses
+Temuan
+
+Login terpisah di banyak file (login.php, loginbackup.php, dll)
+
+Belum terlihat sistem role-based access
+
+Rekomendasi
+
+Satukan autentikasi ke 1 modul
+
+Terapkan role:
+
+Admin
+
+Petugas Lab
+
+Dosen
+
+Mahasiswa
+
+Contoh:
+
+if ($_SESSION['role'] !== 'admin') {
+  header('403');
+}
+
+4. Database Design
+Temuan
+
+File simlab.sql sudah ada (👍)
+
+Namun:
+
+Belum terlihat foreign key
+
+Belum ada audit log
+
+Rekomendasi
+
+Tambahkan:
+
+Relasi foreign key
+
+Soft delete
+
+Log aktivitas
+
+log_aktivitas (user_id, aksi, waktu)
+
+5. UX / UI
+Kelebihan
+
+✅ AdminLTE sudah sangat baik
+✅ Dashboard ringkas & informatif
+
+Kekurangan
+
+Tidak ada:
+
+Empty state
+
+Error handling UI
+
+Notifikasi real-time
+
+Rekomendasi
+
+Tambahkan:
+
+Toast / alert sukses & gagal
+
+Loader saat proses
+
+Konfirmasi sebelum hapus data
+
+Gunakan DataTables secara konsisten
+
+6. Fitur Laboratorium yang Sebaiknya Ada
+
+Jika ini aplikasi lab serius / institusi, sebaiknya punya:
+
+Wajib
+
+Inventaris alat
+
+Peminjaman & pengembalian
+
+Status alat (baik/rusak/hilang)
+
+Jadwal penggunaan lab
+
+Nilai Tambah
+
+Barcode / QR Code alat
+
+Export laporan (PDF / Excel)
+
+Riwayat pemakaian alat
+
+Notifikasi keterlambatan
+
+7. Deployment & Environment
+Temuan
+
+Tidak ada .env
+
+Konfigurasi kemungkinan hardcoded
+
+Rekomendasi
+
+Gunakan file .env
+
+Pisahkan:
+
+dev
+
+staging
+
+production
+
+8. Testing & Dokumentasi
+Kekurangan
+
+Tidak ada dokumentasi
+
+Tidak ada testing
+
+Rekomendasi
+
+Minimal:
+
+README.md
+
+ERD database
+
+Jika lanjut:
+
+PHPUnit (untuk Laravel)
+
+Manual test checklist
+
+Ringkasan Prioritas (PENTING → OPSIONAL)
+🔴 WAJIB SEGERA
+
+SQL Injection protection
+
+Password hashing
+
+Session & auth refactor
+
+🟡 MENENGAH
+
+Refactor struktur kode
+
+Role-based access
+
+Database relasi & logging
+
+🟢 OPSIONAL (TAPI BAGUS)
+
+QR Code
+
+Export laporan
+
+UI improvement
+
+Rekomendasi Terbaik (JUJUR & REALISTIS)
+
+Jika aplikasi ini akan dipakai jangka panjang / resmi kampus:
+
+🔥 Migrasikan ke Laravel
+Lebih aman, rapi, scalable, dan mudah dikembangkan.
+
+Kalau mau, saya bisa bantu:
+
+🔧 Refactor ke Laravel
+
+🔐 Audit keamanan detail per file
+
+📊 Review database & ERD
+
+🚀 Rekomendasi fitur sesuai standar lab kampus
+
+Tinggal bilang mau fokus ke bagian mana 👍
